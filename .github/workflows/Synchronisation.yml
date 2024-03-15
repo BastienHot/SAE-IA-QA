@@ -1,0 +1,25 @@
+name: Synchronisation Production
+on:
+  push:
+    branches: [main]
+
+jobs:
+  sync-to-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Push to hub
+        env:
+          HF_TOKEN_FATIH: ${{secrets.HF_TOKEN_FATIH}}
+        run: |
+          cd Code/Gradio
+          git init
+          git config --global user.name "FFatih"
+          git config --global user.email "f.fatih@outlook.fr"
+          git config --global init.defaultBranch main
+          git branch -m main
+          git add .
+          git commit -m "Synchronisation Production DracolIA"
+          git push --force "https://DracolIA:$HF_TOKEN_FATIH@huggingface.co/spaces/DracolIA/Question_Answering_SQuaD" main
