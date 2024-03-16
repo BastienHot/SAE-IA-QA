@@ -1,16 +1,28 @@
 import streamlit as st
-import requests
 
-st.title("Chat avec Flask")
+from login import show_login
+from signup import show_signup
+from chatbot import show_chatbot
 
-user_input = st.text_input("Votre message :", "")
-send_button = st.button("Envoyer")
+def main():
 
-if send_button:
-    # Envoyer le message à l'API Flask et afficher la réponse
-    response = requests.post("http://localhost:5000/predict", json={"question": user_input})
-    if response.status_code == 200:
-        reply = response.json()
-        st.text(reply)
-    else:
-        st.error("Une erreur est survenue lors de l'envoi du message.")
+    if 'current_page' not in st.session_state:
+        st.session_state['current_page'] = 'Login'
+
+    if 'login_pressed' not in st.session_state:
+        st.session_state['login_pressed'] = False
+
+    if 'signup_pressed' not in st.session_state:
+        st.session_state['signup_pressed'] = False
+
+    if st.session_state['current_page'] == 'Login':
+        show_login()
+
+    if st.session_state['current_page'] == 'Signup':
+        show_signup()
+    
+    if st.session_state['current_page'] == 'Chatbot':
+        show_chatbot()
+
+if __name__ == "__main__":
+    main()

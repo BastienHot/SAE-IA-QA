@@ -1,0 +1,9 @@
+application/application
+
+application/Backend/__pycache__
+application/Backend/Controller/__pycache__
+application/Backend/Model/__pycache__
+application/Backend/Service/__pycache__
+application/Backend/Exception/__pycache__
+
+application/Frontend/__pycache__
