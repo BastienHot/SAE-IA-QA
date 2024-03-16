@@ -13,27 +13,33 @@ class Database:
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 username TEXT NOT NULL,
                 password TEXT NOT NULL
-            );
-                            
+            )
+            '''
+        )
+
+        self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS chat (
                 chat_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 user_id INTEGER NOT NULL,
                 chat_title TEXT NOT NULL,
                 chat_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(user_id)
-            );
-                            
+            )
+            '''
+        )
+
+        self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS chat_message(
                 chat_id INTEGER NOT NULL,
-                chat_message_id INTEGER NOT NULL,
+                chat_message_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 chat_message TEXT NOT NULL,
                 chat_message_is_ia BOOLEAN NOT NULL,
                 chat_message_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                FOREIGN KEY (chat_id) REFERENCES chat(chat_id),
-                FOREIGN KEY (message_id) REFERENCES message(message_id)
-            );
+                FOREIGN KEY (chat_id) REFERENCES chat(chat_id)
+            )
             '''
         )
+
 
 
     """
@@ -78,7 +84,7 @@ class Database:
 
     ### INSERT REQUESTS
     def insert_user(self, username, password):
-        self.cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, password))
+        self.cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
         self.conn.commit()
 
     ### CUSTOM REQUESTS
@@ -186,7 +192,7 @@ class Database:
     def insert_chat_message(self, chat_id, chat_message, chat_message_is_ia):
         self.cursor.execute('INSERT INTO chat_message (chat_id, chat_message, chat_message_is_ia) VALUES (?, ?, ?)', (chat_id, chat_message, chat_message_is_ia))
         self.conn.commit()
-        
+
     
 
     def close(self):
