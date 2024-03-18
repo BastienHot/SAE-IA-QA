@@ -1,28 +1,22 @@
 import streamlit as st
 
-from login import show_login
-from signup import show_signup
-from chatbot import show_chatbot
+from login import view_login
+from signup import view_signup
+from chatbot import view_chatbot
+from Ressources.Session import initialize_session
 
 def main():
 
-    if 'current_page' not in st.session_state:
-        st.session_state['current_page'] = 'Login'
-
-    if 'login_pressed' not in st.session_state:
-        st.session_state['login_pressed'] = False
-
-    if 'signup_pressed' not in st.session_state:
-        st.session_state['signup_pressed'] = False
+    initialize_session()
 
     if st.session_state['current_page'] == 'Login':
-        show_login()
+        view_login()
 
     if st.session_state['current_page'] == 'Signup':
-        show_signup()
+        view_signup()
     
     if st.session_state['current_page'] == 'Chatbot':
-        show_chatbot()
+        view_chatbot()
 
 if __name__ == "__main__":
     main()

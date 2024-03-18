@@ -142,9 +142,23 @@ class Database:
 
     ### INSERT REQUESTS
     def insert_chat(self, user_id, chat_title):
-        self.cursor.execute('INSERT INTO chat (user_id, chat_title) VALUES (?, ?)', (user_id, chat_title))
+        self.cursor.execute("INSERT INTO chat (user_id, chat_title, chat_date) VALUES (?, ?, datetime('now')) RETURNING chat_id", (user_id, chat_title))
+        chat_id = self.cursor.fetchone()[0]
         self.conn.commit()
+        return chat_id
     
+    ### CUSTOM REQUESTS
+    def select_chat_by_id_and_user_id(self, chat_id, user_id):
+        self.cursor.execute('SELECT chat_id, user_id, chat_title, chat_date FROM chat WHERE chat_id = ? AND user_id = ?', (chat_id, user_id))
+        return self.cursor.fetchone()
+    
+    def select_all_user_chats(self, user_id):
+        self.cursor.execute('SELECT chat_id, chat_title, chat_date FROM chat WHERE user_id = ?', (user_id,))
+        return self.cursor.fetchall()
+
+    def delete_chat_by_id_and_by_user_id(self, chat_id, user_id):
+        self.cursor.execute('DELETE FROM chat WHERE chat_id = ? AND user_id = ?', (chat_id, user_id))
+        self.conn.commit()
 
 
 
@@ -194,6 +208,14 @@ class Database:
         self.conn.commit()
 
     
+    def begin_transaction(self):
+        self.conn.execute('BEGIN')
+
+    def commit_transaction(self):
+        self.conn.commit()
+
+    def rollback_transaction(self):
+        self.conn.rollback()
 
     def close(self):
         self.conn.close()

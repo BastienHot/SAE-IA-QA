@@ -32,5 +32,5 @@ class GPT2LoRAHealthCare:
         return GPT2LoRAHealthCare.clean_answer_text(output)
     """
 
-    def generate_responses(question):
+    def generate_responses(self, question):
         return "Reponse chatbot : " + question
