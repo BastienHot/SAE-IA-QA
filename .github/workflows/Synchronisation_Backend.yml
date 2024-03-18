@@ -1,4 +1,4 @@
-name: Synchronisation Frontend
+name: Synchronisation Backend
 on:
   push:
     branches: [main]
@@ -14,7 +14,7 @@ jobs:
         env:
           HF_TOKEN: ${{secrets.HF_TOKEN_DracolIA}}
         run: |
-          cd application/Frontend
+          cd application/Backend
           git init
           git config --global user.name "ZhanPascal"
           git config --global user.email "pascal.zhan.pro@gmail.com"
@@ -22,4 +22,4 @@ jobs:
           git branch -m main
           git add .
           git commit -m "Synchronisation Frontend DracolIA QA"
-          git push --force "https://DracolIA:$HF_TOKEN@huggingface.co/spaces/DracolIA/SAE_Question_Answering_IA_Front" main
+          git push --force "https://DracolIA:$HF_TOKEN@huggingface.co/spaces/DracolIA/SAE_Question_Answering_IA_Back" main
