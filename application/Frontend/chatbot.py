@@ -45,8 +45,14 @@ def view_history():
 
 
 def view_chat():
-    st.text_input("Enter your question", key='user_question', on_change=function_send_message)
+    col1, col2 = st.columns([7, 1])
 
+    with col1:
+        st.text_input("Enter your question", key='user_question', on_change=function_send_message)
+    with col2:
+        st.write('')
+        st.write('')
+        st.button('🔎', on_click=function_send_message)
 
 def view_file_upload():
     st.file_uploader('Upload')  
