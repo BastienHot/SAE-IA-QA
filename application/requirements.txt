@@ -1,5 +1,6 @@
 flask
 streamlit
 requests
-keras-nlp
-keras
+bcrypt
+transformers
+torch
