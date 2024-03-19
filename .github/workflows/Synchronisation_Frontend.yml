@@ -1,0 +1,25 @@
+name: Synchronisation Frontend
+on:
+  push:
+    branches: [main]
+
+jobs:
+  sync-to-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Push to hub
+        env:
+          HF_TOKEN: ${{secrets.HF_TOKEN_DracolIA}}
+        run: |
+          cd application/Frontend
+          git init
+          git config --global user.name "ZhanPascal"
+          git config --global user.email "pascal.zhan.pro@gmail.com"
+          git config --global init.defaultBranch main
+          git branch -m main
+          git add .
+          git commit -m "Synchronisation Frontend DracolIA QA"
+          git push --force "https://DracolIA:$HF_TOKEN@huggingface.co/spaces/DracolIA/SAE_Question_Answering_IA_Front" main
