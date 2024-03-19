@@ -1,8 +1,8 @@
 ---
 title: SAE Question Answering IA Back
-emoji: 🏢
+emoji: 🐳
 colorFrom: purple
 colorTo: blue
 sdk: docker
-pinned: false
+app_port: 7860
 ---
