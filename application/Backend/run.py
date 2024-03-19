@@ -1,5 +1,5 @@
 from flask import Flask
-from Controller.Controller_GPT2LoRAHealthCare import prediction_blueprint
+from Controller.Controller_IA import prediction_blueprint
 from Controller.Controller_Database import signup_blueprint, login_blueprint, user_chat_history_blueprint, delete_chat_blueprint, chat_message_blueprint
 
 app = Flask(__name__)
