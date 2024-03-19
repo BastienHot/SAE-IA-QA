@@ -26,8 +26,11 @@ def initialize_session():
 
 
     # CHAT
-    if 'selected_content' not in st.session_state:
-        st.session_state['selected_content'] = None
+    if 'chat_history' not in st.session_state:
+        st.session_state['chat_history'] = {}
+    
+    if 'selected_chat' not in st.session_state:
+        st.session_state['selected_chat'] = {}
 
     if 'user_question' not in st.session_state:
         st.session_state['user_question'] = ''

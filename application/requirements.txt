@@ -2,6 +2,3 @@ flask
 streamlit
 requests
 bcrypt
-keras-nlp
-keras
-tensorflow

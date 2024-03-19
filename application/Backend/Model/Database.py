@@ -206,8 +206,13 @@ class Database:
     def insert_chat_message(self, chat_id, chat_message, chat_message_is_ia):
         self.cursor.execute('INSERT INTO chat_message (chat_id, chat_message, chat_message_is_ia) VALUES (?, ?, ?)', (chat_id, chat_message, chat_message_is_ia))
         self.conn.commit()
+    
+    def select_chat_message_by_chat_id_and_user_id(self, chat_id, user_id):
+        self.cursor.execute('SELECT chat_message_id, chat_message, chat_message_is_ia, chat_message_date FROM chat_message JOIN chat ON chat_message.chat_id = chat.chat_id WHERE chat_message.chat_id = ? AND chat.user_id = ?', (chat_id, user_id))
+        return self.cursor.fetchall()
 
     
+
     def begin_transaction(self):
         self.conn.execute('BEGIN')
 

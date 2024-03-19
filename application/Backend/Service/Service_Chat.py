@@ -29,7 +29,6 @@ class Service_Chat:
             db.commit_transaction() 
         except Exception as e:
             db.rollback_transaction() 
-            print(f"Failed to create chat: {e}")
         finally:
             db.close()
         

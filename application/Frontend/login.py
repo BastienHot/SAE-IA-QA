@@ -5,14 +5,16 @@ from Ressources.Config import URL
 
 def view_login():
     st.title("Login Page")
-    
-    st.text_input("Username", key='username')
-    st.text_input("Password", type="password", key='password')
+    st.write("Welcome to the HealthCare ChatBot. Please login to continue. If you don't have an account, please signup.")
+
+    username = st.text_input("Username", key='username')
+    password = st.text_input("Password", type="password", key='password')
 
     col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
 
     with col1:
-        if st.button("Login", on_click=function_login_button_pressed):
+        login_disabled = not username or not password
+        if st.button("Login", on_click=function_login_button_pressed, disabled=login_disabled):
             pass
 
     with col8:
@@ -50,3 +52,5 @@ def function_login_button_pressed():
 def function_signup_button_pressed():
     st.session_state['current_page'] = 'Signup'
     st.session_state['signup_pressed'] = True
+    st.session_state['username'] = None
+    st.session_state['password'] = None

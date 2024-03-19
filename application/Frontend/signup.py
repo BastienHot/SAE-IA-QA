@@ -5,14 +5,16 @@ from Ressources.Config import URL
 
 def view_signup():
     st.title("Signup Page")
+    st.write("You don't have an account yet? Please signup. If you already have an account, please login.")
 
-    st.text_input("Username", key='username')
-    st.text_input("Password", type="password", key='password')
+    username = st.text_input("Username", key='username')
+    password = st.text_input("Password", type="password", key='password')
 
     col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
 
     with col1:
-        if st.button("Signup", on_click=function_signup_button_pressed):
+        signup_disabled = not username or not password
+        if st.button("Signup", on_click=function_signup_button_pressed, disabled=signup_disabled):
             pass 
 
     with col8:

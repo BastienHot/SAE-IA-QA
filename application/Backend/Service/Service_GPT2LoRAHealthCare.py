@@ -28,7 +28,7 @@ class Service_GPT2LoRAHealthCare:
                 "chat_title": chat_title,
                 "ia_response": ia_response,
                 "user_question": user_question
-            },
+            }
 
         else:
             serviceChatMessage.add_user_chat_message(chat_id, user_question, user_is_connected)
