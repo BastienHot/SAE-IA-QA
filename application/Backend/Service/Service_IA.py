@@ -22,7 +22,7 @@ class Service_IA:
             serviceChatMessage.add_user_chat_message(new_chat_id, user_question, user_is_connected)
 
             ia_response = ia.generate_responses(user_question)
-            serviceChatMessage.add_ia_chat_message(new_chat_id, ia_response)
+            serviceChatMessage.add_ia_chat_message(new_chat_id, str(ia_response))
 
             return {
                 "chat_id": new_chat_id,
@@ -34,7 +34,7 @@ class Service_IA:
         else:
             serviceChatMessage.add_user_chat_message(chat_id, user_question, user_is_connected)
             ia_response = ia.generate_responses(user_question)
-            serviceChatMessage.add_ia_chat_message(chat_id, ia_response)
+            serviceChatMessage.add_ia_chat_message(chat_id, str(ia_response))
 
             return {
                 "chat_id": chat_id,

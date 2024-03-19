@@ -60,8 +60,6 @@ def function_initialize_history():
     })
 
     st.session_state.chat_history = response.json()
-    print(st.session_state.chat_history)
-
 
 def function_send_message():
     response = requests.post(URL + "/predict", json={

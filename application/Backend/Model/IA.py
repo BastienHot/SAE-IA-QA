@@ -1,32 +1,27 @@
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+import torch
+
 class IA:
-
-    """
-    #model_name = "DracolIA/GPT-2-LoRA-HealthCare"
-    model_name = "LoRA_Model_CP3.keras"
-    model = keras.models.load_model(model_name)
-
-    def clean_answer_text(text: str) -> str:
-        # Define the start marker for the model's response
-        response_start = text.find("[ANSWER]") + len("[ANSWER]")
-
-        # Extract everything after "Doctor:"
-        response_text = text[response_start:].strip()
-        last_dot_index = response_text.rfind(".")
-        if last_dot_index != -1:
-            response_text = response_text[:last_dot_index + 1]
-
-        # Additional cleaning if necessary (e.g., removing leading/trailing spaces or new lines)
-        response_text = response_text.strip()
-
-        return response_text
-
-
-    def generate_responses(self, question):
-        prompt = f"[QUESTION] {question} [ANSWER]"
-        output = self.model.generate(prompt, max_length=1024)
-        # Clean and extract the model's response from `output`
-        return GPT2LoRAHealthCare.clean_answer_text(output)
-    """
-
-    def generate_responses(self, question):
-        return "Reponse chatbot : " + question
+    def __init__(self):
+        model_name = 'gpt2'
+        self.tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+        self.model = GPT2LMHeadModel.from_pretrained(model_name)
+    
+    def generate_responses(self, text, max_length=500):
+        # Encode le texte d'entrée
+        encoded_input = self.tokenizer.encode(text, return_tensors='pt')
+        # Génère une suite de texte
+        output_sequences = self.model.generate(
+            input_ids=encoded_input,
+            max_length=max_length,
+            temperature=1.0,
+            top_k=50,
+            top_p=0.95,
+            repetition_penalty=1.2,
+            do_sample=True,
+            num_return_sequences=1
+        )
+        # Décode la sortie générée en texte
+        generated_text = self.tokenizer.decode(output_sequences[0], skip_special_tokens=True)
+        
+        return generated_text

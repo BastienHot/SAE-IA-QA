@@ -2,3 +2,5 @@ flask
 streamlit
 requests
 bcrypt
+transformers
+torch
