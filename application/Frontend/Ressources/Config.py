@@ -1,1 +1,1 @@
-URL = "http://localhost:5000/"
+URL = "https://dracolia-sae-question-answering-ia-back.hf.space/"
