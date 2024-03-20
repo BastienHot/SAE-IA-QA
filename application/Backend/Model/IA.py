@@ -2,7 +2,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel
 import torch
 
 class IA:
-    def __init__(self, cache_dir="/code/.cache"):
+    def __init__(self, cache_dir="./.cache"):
         model_name = 'gpt2'
         self.tokenizer = GPT2Tokenizer.from_pretrained(model_name, cache_dir=cache_dir)
         self.model = GPT2LMHeadModel.from_pretrained(model_name, cache_dir=cache_dir)
