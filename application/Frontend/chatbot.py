@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 from Ressources.Config import URL
+from Service.Service_File import Service_File
 
 def view_chatbot():
     view_history()
@@ -45,7 +46,7 @@ def view_history():
 
 
 def view_chat():
-    col1, col2 = st.columns([7, 1])
+    col1, col2 = st.columns  ([7, 1])
 
     with col1:
         st.text_input("Enter your question", key='user_question', on_change=function_send_message)
@@ -55,9 +56,23 @@ def view_chat():
         st.button('🔎', on_click=function_send_message)
 
 def view_file_upload():
-    st.file_uploader('Upload')  
+    file = st.file_uploader('Upload', type=['.docx', '.pdf', '.xlsx', '.csv'])  
     st.write('') 
 
+    st.session_state['have_file'] = False
+    st.session_state['file_content'] = ''
+
+    serviceFile = Service_File()
+    string = ''
+
+    if file is not None:
+        try:
+            string += serviceFile.file_for_string(file)
+            st.session_state['have_file'] = True
+        except Exception as e:
+            st.error(e)
+        st.session_state['file_content'] = string
+        print(st.session_state['file_content'])
 
 def function_initialize_history():
     response = requests.get(URL + "/chatHistory", json={
@@ -72,7 +87,9 @@ def function_send_message():
         'user_id': st.session_state['user_id'],
         'chat_id': st.session_state['chat_id'],
         'user_is_connected': st.session_state['user_is_connected'],
-        'user_question': st.session_state['user_question']
+        'user_question': st.session_state['user_question'],
+        'file_content': st.session_state['file_content'],
+        'have_file': st.session_state['have_file']
     })
 
     content = response.json()

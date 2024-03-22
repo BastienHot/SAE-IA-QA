@@ -7,7 +7,7 @@ class Service_IA:
     def __init__(self):
         pass
 
-    def generate_responses(self, user_question, user_id, chat_id, user_is_connected):
+    def generate_responses(self, user_question, user_id, chat_id, user_is_connected, file_content, have_file):
         if user_is_connected == False:
             raise UserNotConnectedException("User not connected")    
 
@@ -15,32 +15,26 @@ class Service_IA:
         serviceChatMessage = Service_Chat_Message()
         ia = IA()
 
+        ia_response_json = {}
+        ia_response_json["chat_id"] = chat_id
+        ia_response_json["user_question"] = user_question
+
         if chat_id == None:
             chat_title = self.title_chat(user_question)
-
             new_chat_id = serviceChat.create_chat(user_id, chat_title, user_is_connected)
-            serviceChatMessage.add_user_chat_message(new_chat_id, user_question, user_is_connected)
 
-            ia_response = ia.generate_responses(user_question)
-            serviceChatMessage.add_ia_chat_message(new_chat_id, str(ia_response))
+            ia_response_json["chat_id"] = new_chat_id
+            ia_response_json["chat_title"] = chat_title
 
-            return {
-                "chat_id": new_chat_id,
-                "chat_title": chat_title,
-                "ia_response": ia_response,
-                "user_question": user_question
-            }
+            chat_id = new_chat_id
 
-        else:
-            serviceChatMessage.add_user_chat_message(chat_id, user_question, user_is_connected)
-            ia_response = ia.generate_responses(user_question)
-            serviceChatMessage.add_ia_chat_message(chat_id, str(ia_response))
+        ia_response = ia.generate_responses(user_question, file_content, have_file)
+        ia_response_json["ia_response"] = ia_response
+        
+        serviceChatMessage.add_user_chat_message(chat_id, user_question, user_is_connected)
+        serviceChatMessage.add_ia_chat_message(chat_id, str(ia_response))
 
-            return {
-                "chat_id": chat_id,
-                "ia_response": ia_response,
-                "user_question": user_question
-            }
+        return ia_response_json
 
     def title_chat(self, chat_title):
         chat_title = chat_title[:19]

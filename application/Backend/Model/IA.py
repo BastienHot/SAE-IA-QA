@@ -1,27 +1,54 @@
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import AutoTokenizer, AutoModelForQuestionAnswering
 import torch
 
 class IA:
-    def __init__(self, cache_dir="./.cache"):
-        model_name = 'gpt2'
-        self.tokenizer = GPT2Tokenizer.from_pretrained(model_name, cache_dir=cache_dir)
-        self.model = GPT2LMHeadModel.from_pretrained(model_name, cache_dir=cache_dir)
+    def __init__(self):
+        model_name = 'DracolIA/BERT-Context-based-QA'
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = AutoModelForQuestionAnswering.from_pretrained(model_name)
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    def generate_responses(self, text, max_length=500):
-        # Encode le texte d'entrée
-        encoded_input = self.tokenizer.encode(text, return_tensors='pt')
-        # Génère une suite de texte
-        output_sequences = self.model.generate(
-            input_ids=encoded_input,
-            max_length=max_length,
-            temperature=1.0,
-            top_k=50,
-            top_p=0.95,
-            repetition_penalty=1.2,
-            do_sample=True,
-            num_return_sequences=1
-        )
-        # Décode la sortie générée en texte
-        generated_text = self.tokenizer.decode(output_sequences[0], skip_special_tokens=True)
+    def generate_responses(self, question, file_content, have_file):
+        print("============================================================================================================Question : ", question)
         
-        return generated_text
+        if have_file:
+            context = file_content
+        else:   
+            context = ""
+    
+        # Tokenize the input question and context
+        inputs = self.tokenizer.encode_plus(
+            question, context,
+            add_special_tokens=True,
+            return_tensors="pt",
+            truncation="only_second",  # Only truncate the context, not the question
+            max_length=512,
+            stride=128,
+            return_overflowing_tokens=True,
+            return_offsets_mapping=True,
+            padding="max_length"
+        )
+
+        input_ids = inputs["input_ids"].to(self.device)
+        attention_mask = inputs["attention_mask"].to(self.device)
+
+        # Model inference
+        with torch.no_grad():
+            outputs = self.model(input_ids, attention_mask=attention_mask)
+
+        # Get the most likely beginning and end of answer with the argmax of the score
+        answer_start_scores = outputs.start_logits
+        answer_end_scores = outputs.end_logits
+
+        answer_start = torch.argmax(answer_start_scores, dim=-1)  # Get the index of the highest start score
+        answer_end = torch.argmax(answer_end_scores, dim=-1) + 1  # Get the index of the highest end score
+
+        # Convert the token indexes to actual text of the answer
+        answer = self.tokenizer.decode(inputs['input_ids'][0][answer_start:answer_end], skip_special_tokens=True)
+
+        #print(input_ids)
+        print("Answer start : ", answer_start)
+        print("Answer end : " , answer_end)
+        print(self.tokenizer.decode(input_ids[0][answer_end:answer_start]))
+        return answer
+

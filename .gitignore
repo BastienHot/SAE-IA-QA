@@ -8,4 +8,7 @@ application/Backend/Exception/__pycache__
 
 application/Frontend/__pycache__
 application/Frontend/Ressources/__pycache__
+application/Frontend/Service/__pycache__
+application/Frontend/Exception/__pycache__
+
 application/database.db

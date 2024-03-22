@@ -37,5 +37,10 @@ def initialize_session():
 
     if 'chat_id' not in st.session_state:
         st.session_state['chat_id'] = None
+
+    if 'file_content' not in st.session_state:
+        st.session_state['file_content'] = ''
     
+    if 'have_file' not in st.session_state:
+        st.session_state['have_file'] = False
     
