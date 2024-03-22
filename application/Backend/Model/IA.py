@@ -2,14 +2,13 @@ from transformers import AutoTokenizer, AutoModelForQuestionAnswering
 import torch
 
 class IA:
-    def __init__(self):
+    def __init__(self, cache_dir="./.cache"):
         model_name = 'DracolIA/BERT-Context-based-QA'
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForQuestionAnswering.from_pretrained(model_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
+        self.model = AutoModelForQuestionAnswering.from_pretrained(model_name, cache_dir=cache_dir)
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     def generate_responses(self, question, file_content, have_file):
-        print("============================================================================================================Question : ", question)
         
         if have_file:
             context = file_content
