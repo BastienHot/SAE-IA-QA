@@ -3,7 +3,7 @@ import torch
 from googletrans import Translator
 
 class IA:
-    def __init__(self, cache_dir="./.cache"):
+    def __init__(self, cache_dir="/code/.cache"):
         self.tokenizer_bert = AutoTokenizer.from_pretrained('DracolIA/BERT-Context-based-QA', cache_dir=cache_dir)
         self.model_bert = AutoModelForQuestionAnswering.from_pretrained('DracolIA/BERT-Context-based-QA', cache_dir=cache_dir)
 
