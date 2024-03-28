@@ -3,4 +3,4 @@ bcrypt
 transformers
 torch
 gunicorn
-googletrans
+googletrans-py
