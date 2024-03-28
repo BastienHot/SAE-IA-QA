@@ -1,6 +1,6 @@
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering
 import torch
-#from googletrans import Translator
+from googletrans import Translator
 
 class IA:
     def __init__(self, cache_dir="/code/.cache"):
@@ -13,7 +13,7 @@ class IA:
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     def generate_responses(self, question, file_content, have_file, selected_model):
-        #translator = Translator()
+        translator = Translator()
 
         if have_file:
             context = file_content
@@ -29,9 +29,9 @@ class IA:
             model = self.model_bigbird
             see = "BIGBIRD"
 
-        #language = translator.detect(question).lang.upper() # Verify the language of the prompt
-        #if language != "EN":
-        #        question = translator.translate(question, src=language, dest="en").text # Translation of user text to english for the model
+        language = translator.detect(question).lang.upper() # Verify the language of the prompt
+        if language != "EN":
+                question = translator.translate(question, src=language, dest="en").text # Translation of user text to english for the model
 
         # Tokenize the input question and context
         inputs = tokenizer.encode_plus(
@@ -62,8 +62,8 @@ class IA:
 
         # Convert the token indexes to actual text of the answer
         answer = tokenizer.decode(inputs['input_ids'][0][answer_start:answer_end], skip_special_tokens=True)
-        #if language != "EN":
-        #    answer = Translator().translate(answer, src="en", dest=language).text # Translation of model's text to user's language
+        if language != "EN":
+            answer = Translator().translate(answer, src="en", dest=language).text # Translation of model's text to user's language
 
         return answer
 
