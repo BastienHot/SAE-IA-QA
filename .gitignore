@@ -1,4 +1,5 @@
 application/application
+application/.cache
 
 application/Backend/__pycache__
 application/Backend/Controller/__pycache__

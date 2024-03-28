@@ -1,25 +1,34 @@
 import streamlit as st
 import requests
 from Ressources.Config import URL
+from Ressources.Translations import translations
 
 
 def view_signup():
-    st.title("Signup Page")
-    st.write("You don't have an account yet? Please signup. If you already have an account, please login.")
+    Global = translations[st.session_state['languages']]
+    signup = translations[st.session_state['languages']]['signupPage']
 
-    username = st.text_input("Username", key='username')
-    password = st.text_input("Password", type="password", key='password')
+    st.title(signup['signup'])
+    st.write(signup['description'])
 
-    col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
+    username = st.text_input(Global["username"], key='username')
+    password = st.text_input(Global["password"], type="password", key='password')
 
-    with col1:
-        signup_disabled = not username or not password
-        if st.button("Signup", on_click=function_signup_button_pressed, disabled=signup_disabled):
-            pass 
+    signup_disabled = not username or not password
+    st.button(signup['signup'], on_click=function_signup_button_pressed, disabled=signup_disabled)
 
-    with col8:
-        if st.button("Login", on_click=function_login_button_pressed):
-            pass
+    col1, col2, col3 = st.sidebar.columns([3, 1, 1])
+    col1.write(Global['language'])
+    col2.button('EN ', on_click=function_set_language, args=('en',))
+    col3.button('FR ', on_click=function_set_language, args=('fr',))
+    
+    col1, col3 = st.sidebar.columns([4, 1])
+    col1.write(signup['connectAccount'])
+    col3.button("👋", on_click=function_login_button_pressed)
+
+
+def function_set_language(locale):
+    st.session_state['language'] = locale
 
 
 def function_signup_button_pressed():

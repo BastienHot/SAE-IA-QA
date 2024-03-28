@@ -4,3 +4,4 @@ requests
 bcrypt
 transformers
 torch
+googletrans

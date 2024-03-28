@@ -13,7 +13,8 @@ def predict():
     user_is_connected = request.json['user_is_connected']
     file_content = request.json['file_content']
     have_file = request.json['have_file']
+    model = request.json['model_selected']
 
-    predictions = ia.generate_responses(question, user_id, chat_id, user_is_connected, file_content, have_file)
+    predictions = ia.generate_responses(question, user_id, chat_id, user_is_connected, file_content, have_file, model)
 
     return jsonify(predictions)

@@ -17,7 +17,7 @@ class Service_Chat:
         db.close()
         return chat
     
-    def create_chat(self, user_id, chat_title, is_connected):
+    def create_chat(self, user_id, chat_title, is_connected, model):
         db = Database()
 
         if is_connected == False:
@@ -25,7 +25,7 @@ class Service_Chat:
         
         try:
             db.begin_transaction()
-            chat_id = db.insert_chat(user_id, chat_title)
+            chat_id = db.insert_chat(user_id, chat_title, model)
             db.commit_transaction() 
         except Exception as e:
             db.rollback_transaction() 
@@ -53,14 +53,16 @@ class Service_Chat:
     
         if is_connected == False:
             raise UserNotConnectedException("User not connected")
-        
+        print('Service_Chat.get_all_user_chats(')
+
         chats = db.select_all_user_chats(user_id)
 
         for chat in chats:
             data = {
                 'chat_id': chat[0],
                 'chat_title': chat[1],
-                'chat_date': chat[2]
+                'chat_date': chat[2],
+                'chat_model': chat[3]
             }
 
             datas.update({chat[0]: data})

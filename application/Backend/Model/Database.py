@@ -23,6 +23,7 @@ class Database:
                 user_id INTEGER NOT NULL,
                 chat_title TEXT NOT NULL,
                 chat_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                chat_model TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(user_id)
             )
             '''
@@ -103,15 +104,15 @@ class Database:
     """
     ### SELECT REQUESTS
     def select_chat_by_id(self, chat_id):
-        self.cursor.execute('SELECT chat_id, user_id, chat_title, chat_date FROM chat WHERE chat_id = ?', (chat_id,))
+        self.cursor.execute('SELECT chat_id, user_id, chat_title, chat_date, chat_model FROM chat WHERE chat_id = ?', (chat_id,))
         return self.cursor.fetchone()
     
     def select_chat_by_user_id(self, user_id):
-        self.cursor.execute('SELECT chat_id, user_id, chat_title, chat_date FROM chat WHERE user_id = ?', (user_id,))
+        self.cursor.execute('SELECT chat_id, user_id, chat_title, chat_date, chat_model FROM chat WHERE user_id = ?', (user_id,))
         return self.cursor.fetchall()
     
     def select_chat_by_title(self, chat_title):
-        self.cursor.execute('SELECT chat_id, user_id, chat_title, chat_date FROM chat WHERE chat_title = ?', (chat_title,))
+        self.cursor.execute('SELECT chat_id, user_id, chat_title, chat_date, chat_model FROM chat WHERE chat_title = ?', (chat_title,))
         return self.cursor.fetchone()
     
     ### DELETE REQUESTS
@@ -141,19 +142,19 @@ class Database:
         self.conn.commit()
 
     ### INSERT REQUESTS
-    def insert_chat(self, user_id, chat_title):
-        self.cursor.execute("INSERT INTO chat (user_id, chat_title, chat_date) VALUES (?, ?, datetime('now')) RETURNING chat_id", (user_id, chat_title))
+    def insert_chat(self, user_id, chat_title, chat_model):
+        self.cursor.execute("INSERT INTO chat (user_id, chat_title, chat_date, chat_model) VALUES (?, ?, datetime('now'), ?) RETURNING chat_id", (user_id, chat_title, chat_model))
         chat_id = self.cursor.fetchone()[0]
         self.conn.commit()
         return chat_id
     
     ### CUSTOM REQUESTS
     def select_chat_by_id_and_user_id(self, chat_id, user_id):
-        self.cursor.execute('SELECT chat_id, user_id, chat_title, chat_date FROM chat WHERE chat_id = ? AND user_id = ?', (chat_id, user_id))
+        self.cursor.execute('SELECT chat_id, user_id, chat_title, chat_date, chat_model FROM chat WHERE chat_id = ? AND user_id = ?', (chat_id, user_id))
         return self.cursor.fetchone()
     
     def select_all_user_chats(self, user_id):
-        self.cursor.execute('SELECT chat_id, chat_title, chat_date FROM chat WHERE user_id = ?', (user_id,))
+        self.cursor.execute('SELECT chat_id, chat_title, chat_date, chat_model FROM chat WHERE user_id = ?', (user_id,))
         return self.cursor.fetchall()
 
     def delete_chat_by_id_and_by_user_id(self, chat_id, user_id):
