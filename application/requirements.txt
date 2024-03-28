@@ -1,7 +1,11 @@
 flask
-streamlit
-requests
 bcrypt
 transformers
 torch
-googletrans
+gunicorn
+googletrans-py
+streamlit
+requests
+python-docx
+pymupdf
+reportlab

@@ -53,7 +53,6 @@ class Service_Chat:
     
         if is_connected == False:
             raise UserNotConnectedException("User not connected")
-        print('Service_Chat.get_all_user_chats(')
 
         chats = db.select_all_user_chats(user_id)
 

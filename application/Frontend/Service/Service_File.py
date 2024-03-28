@@ -33,8 +33,6 @@ class Service_File:
         string = ""
         with fitz.open(stream=file.getvalue()) as doc:
             for page in doc:
-                print("service file", page)
-
                 string += page.get_text()
         return string
 
