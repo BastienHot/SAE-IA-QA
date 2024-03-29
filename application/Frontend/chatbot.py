@@ -35,11 +35,14 @@ def view_chatbot():
         view_chat()
 
 def view_select_model():
-    col1, col2, col3, col4, col5= st.columns([2, 1, 1, 1, 2])
 
-    col2.button('Bert', on_click=function_select_model, args=('Bert',))
-    col3.button('BigBird', on_click=function_select_model, args=('BigBird',))
-    col4.button('Model 3', on_click=function_select_model, args=('model_3',))
+    col1, col2 = st.columns([2,6])
+
+    col1.button('Bert', on_click=function_select_model, args=('Bert',))
+    col1.button('BigBird', on_click=function_select_model, args=('BigBird',))
+    col1.button('Model 3', on_click=function_select_model, args=('model_3',))
+
+
 
 
 def view_history(): 
