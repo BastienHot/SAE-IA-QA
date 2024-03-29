@@ -14,9 +14,12 @@ class IA:
     
     def generate_responses(self, question, file_content, have_file, selected_model):
         translator = Translator()
+        language = translator.detect(question).lang.upper() # Verify the language of the prompt
 
         if have_file:
             context = file_content
+            if language != "EN":
+                context = translator.translate(context, src=language, dest="en").text # Translation of user text to english for the model
         else:   
             context = ""
 
@@ -29,7 +32,6 @@ class IA:
             model = self.model_bigbird
             see = "BIGBIRD"
 
-        language = translator.detect(question).lang.upper() # Verify the language of the prompt
         if language != "EN":
                 question = translator.translate(question, src=language, dest="en").text # Translation of user text to english for the model
 
