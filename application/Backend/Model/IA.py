@@ -18,8 +18,6 @@ class IA:
 
         if have_file:
             context = file_content
-            if language != "EN":
-                context = translator.translate(context, src=language, dest="en").text # Translation of user text to english for the model
         else:   
             context = ""
 
