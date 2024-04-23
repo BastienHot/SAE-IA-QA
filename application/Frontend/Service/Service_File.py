@@ -15,30 +15,18 @@ class Service_File:
         
         if file.name.endswith('.docx'):
             string = self.word_to_string(file)
-            language = translator.detect(string).lang.upper()
-            if language != "EN":
-                string = translator.translate(string, src=language, dest="en").text
             return string
         
         elif file.name.endswith('.pdf'):
             string = self.pdf_to_string(file)
-            language = translator.detect(string).lang.upper()
-            if language != "EN":
-                string = translator.translate(string, src=language, dest="en").text
             return string
         
         elif file.name.endswith('.xlsx'):
             string = self.excel_to_string(file)
-            language = translator.detect(string).lang.upper()
-            if language != "EN":
-                string = translator.translate(string, src=language, dest="en").text
             return string
         
         elif file.name.endswith('.csv'):
             string = self.csv_to_string(file)
-            language = translator.detect(string).lang.upper()
-            if language != "EN":
-                string = translator.translate(string, src=language, dest="en").text
             return string
         
         else:
@@ -76,3 +64,4 @@ class Service_File:
             formatted_string += ', '.join(line_values) + '\n'
         
         return formatted_string.strip()
+    

@@ -3,7 +3,7 @@ from Service.Service_User import Service_User
 from Service.Service_Chat import Service_Chat
 from Service.Service_Chat_Message import Service_Chat_Message
 from Exception.UserExistsException import UserExistsException
-from Exception.UserNotFoundException import UserNotFoundException
+from Exception.UserOrPasswordIncorrectException import UserOrPasswordIncorrectException
 
 signup_blueprint = Blueprint('signup', __name__)
 login_blueprint = Blueprint('login', __name__)
@@ -36,14 +36,14 @@ def login_user():
     try:
         user_information = service_user.login_user(username, password)
 
-        if user_information['password']:
-            user_information['message']= 'Connected successfully.'
-            return jsonify(user_information), 200
-        else:
-            return jsonify({'message': 'Password incorrect.'}), 401
+        if user_information['password_match']:
+            user_information['message'] = 'Connected successfully.'
+            user_information['state'] = True
+            return jsonify(user_information)
         
-    except UserNotFoundException:
-        return jsonify({'message': 'User not found.'}), 404
+    except UserOrPasswordIncorrectException as e:
+        return jsonify({'message': str(e), 'state': False})
+    
     
 @user_chat_history_blueprint.route('/chatHistory', methods=['GET'])
 def user_chat_history():

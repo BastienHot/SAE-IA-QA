@@ -35,7 +35,7 @@ def function_login_button_pressed():
 
     content = response.json()
         
-    if response.status_code == 200:
+    if content['state']:
         st.session_state['current_page'] = 'Chatbot'
         st.session_state['login_pressed'] = True
 
@@ -45,13 +45,8 @@ def function_login_button_pressed():
 
         st.session_state['username'] = None
         st.session_state['password'] = None
-        
-    elif response.status_code == 401:
-        st.error(content['message'])
-    elif response.status_code == 404:
-        st.error(content['message'])
     else:
-        st.error("Error: 500 Internal Server Error. Please try again later.")
+        st.error(content['message'])
 
 
 def function_signup_button_pressed():

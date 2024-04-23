@@ -1,7 +1,6 @@
 from Model.Database import Database
 from Exception.UserExistsException import UserExistsException
-from Exception.UserNotFoundException import UserNotFoundException
-from Exception.PasswordNotMatchException import PasswordNotMatchException
+from Exception.UserOrPasswordIncorrectException import UserOrPasswordIncorrectException
 import bcrypt
 
 class Service_User:
@@ -31,7 +30,7 @@ class Service_User:
         
         if user_info is None:
             db.close()
-            raise UserNotFoundException("User not found")
+            raise UserOrPasswordIncorrectException("User or Password incorrect.")
 
         hashed_password_from_db = user_info[2]
 
@@ -42,14 +41,14 @@ class Service_User:
 
         password_match = bcrypt.checkpw(password.encode('utf-8'), hashed_password_from_db)
 
-        if password_match == False:
-            raise PasswordNotMatchException("Password incorrect")
-
         db.close()
+
+        if password_match == False:
+            raise UserOrPasswordIncorrectException("User or Password incorrect.")
         
         return {
             'user_id': user_info[0],
             'user_name': user_info[1],
             'user_is_connected': True,
-            'password': password_match
+            'password_match': password_match
         }
