@@ -14,24 +14,23 @@ class IA:
     
     def generate_responses(self, question, file_content, have_file, selected_model):
         translator = Translator()
-        language = translator.detect(question).lang.upper() # Verify the language of the prompt
+        language = translator.detect(str(question)).lang.upper() # Verify the language of the prompt
 
         if have_file:
-            context = file_content
+            context = str(file_content)
         else:   
-            context = ""
+            context = str()
 
         if selected_model.upper() == "BERT":
             tokenizer = self.tokenizer_bert
             model = self.model_bert
-            see = "BERT"
+
         elif selected_model.upper() == "BIGBIRD":
             tokenizer = self.tokenizer_bigbird
             model = self.model_bigbird
-            see = "BIGBIRD"
 
         if language != "EN":
-                question = translator.translate(question, src=language, dest="en").text # Translation of user text to english for the model
+                question = translator.translate(str(question), src=language, dest="en").text # Translation of user text to english for the model
 
         # Tokenize the input question and context
         inputs = tokenizer.encode_plus(
@@ -62,8 +61,9 @@ class IA:
 
         # Convert the token indexes to actual text of the answer
         answer = tokenizer.decode(inputs['input_ids'][0][answer_start:answer_end], skip_special_tokens=True)
+        print(answer)
         if language != "EN":
-            answer = Translator().translate(answer, src="en", dest=language).text # Translation of model's text to user's language
+            answer = Translator().translate(str(answer), src="en", dest=language).text # Translation of model's text to user's language
 
-        return answer
+        return str(answer)
 

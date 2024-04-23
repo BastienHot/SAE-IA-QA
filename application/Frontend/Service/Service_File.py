@@ -15,22 +15,24 @@ class Service_File:
         
         if file.name.endswith('.docx'):
             string = self.word_to_string(file)
-            return string
         
         elif file.name.endswith('.pdf'):
             string = self.pdf_to_string(file)
-            return string
         
         elif file.name.endswith('.xlsx'):
             string = self.excel_to_string(file)
-            return string
         
         elif file.name.endswith('.csv'):
             string = self.csv_to_string(file)
-            return string
         
         else:
             raise FileTypeIsNotAcceptedException('File type is not accepted. Please upload a .docx, .pdf, .xlsx or .csv file.')
+        
+        language = translator.detect(str(string)).lang.upper() # Verify the language of the prompt
+        if language != "EN":
+            string = translator.translate(str(string), src=language, dest="EN").text
+        
+        return string
 
     def pdf_to_string(self, file):
         string = ""
