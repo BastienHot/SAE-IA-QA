@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
-from Service.Service_User import Service_User
-from Service.Service_Chat import Service_Chat
-from Service.Service_Chat_Message import Service_Chat_Message
-from Exception.UserExistsException import UserExistsException
-from Exception.UserOrPasswordIncorrectException import UserOrPasswordIncorrectException
+from Services.Service_User import Service_User
+from Services.Service_Chat import Service_Chat
+from Services.Service_Chat_Message import Service_Chat_Message
+from Exceptions.UserExistsException import UserExistsException
+from Exceptions.UserOrPasswordIncorrectException import UserOrPasswordIncorrectException
 
 signup_blueprint = Blueprint('signup', __name__)
 login_blueprint = Blueprint('login', __name__)

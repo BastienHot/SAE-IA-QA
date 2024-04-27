@@ -3,8 +3,9 @@ from docx import Document
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import pandas as pd
-from Exception.FileTypeIsNotAcceptedException import FileTypeIsNotAcceptedException
+from Exceptions.FileTypeIsNotAcceptedException import FileTypeIsNotAcceptedException
 from googletrans import Translator
+import re
 
 class Service_File:
     def __init__(self):
@@ -29,8 +30,11 @@ class Service_File:
             raise FileTypeIsNotAcceptedException('File type is not accepted. Please upload a .docx, .pdf, .xlsx or .csv file.')
         
         language = translator.detect(str(string)).lang.upper() # Verify the language of the prompt
-        if language != "EN":
-            string = translator.translate(str(string), src=language, dest="EN").text
+        if string != "" or len(string) != 0:
+            if language != "EN":
+                string = translator.translate(str(string), src=language, dest="EN").text
+
+        string = string.replace('\n', ' ').replace('\t', ' ').replace('"', ' ').replace("'", ' ')
         
         return string
 

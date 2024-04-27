@@ -1,6 +1,6 @@
 from Model.Database import Database
-from Exception.UserExistsException import UserExistsException
-from Exception.UserOrPasswordIncorrectException import UserOrPasswordIncorrectException
+from Exceptions.UserExistsException import UserExistsException
+from Exceptions.UserOrPasswordIncorrectException import UserOrPasswordIncorrectException
 import bcrypt
 
 class Service_User:

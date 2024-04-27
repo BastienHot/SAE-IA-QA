@@ -1,6 +1,6 @@
 from Model.Database import Database
-from Exception.UserNotConnectedException import UserNotConnectedException
-from Service.Service_Chat_Message import Service_Chat_Message
+from Exceptions.UserNotConnectedException import UserNotConnectedException
+from Services.Service_Chat_Message import Service_Chat_Message
 
 class Service_Chat:
     def __init__(self):

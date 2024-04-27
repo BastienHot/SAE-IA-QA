@@ -52,3 +52,6 @@ def initialize_session():
 
     if 'languages' not in st.session_state:
         st.session_state['languages'] = "en"
+
+    if 'is_chat_show' not in st.session_state:
+        st.session_state['is_chat_show'] = False

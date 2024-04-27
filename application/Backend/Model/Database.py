@@ -34,6 +34,7 @@ class Database:
                 chat_id INTEGER NOT NULL,
                 chat_message_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 chat_message TEXT NOT NULL,
+                chat_message_file_content TEXT,
                 chat_message_is_ia BOOLEAN NOT NULL,
                 chat_message_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 FOREIGN KEY (chat_id) REFERENCES chat(chat_id)
@@ -170,15 +171,15 @@ class Database:
     """
     ### SELECT REQUESTS
     def select_chat_message_by_chat_id(self, chat_id):
-        self.cursor.execute('SELECT chat_id, chat_message_id, chat_message, chat_message_is_ia, chat_message_date FROM chat_message WHERE chat_id = ?', (chat_id,))
+        self.cursor.execute('SELECT chat_id, chat_message_id, chat_message, chat_message_file_content, chat_message_is_ia, chat_message_date FROM chat_message WHERE chat_id = ?', (chat_id,))
         return self.cursor.fetchall()
     
     def select_chat_message_by_chat_message_id(self, chat_message_id):
-        self.cursor.execute('SELECT chat_id, chat_message_id, chat_message, chat_message_is_ia, chat_message_date FROM chat_message WHERE chat_message_id = ?', (chat_message_id,))
+        self.cursor.execute('SELECT chat_id, chat_message_id, chat_message, chat_message_file_content, chat_message_is_ia, chat_message_date FROM chat_message WHERE chat_message_id = ?', (chat_message_id,))
         return self.cursor.fetchone()
     
     def select_chat_message_by_chat_message(self, chat_message):
-        self.cursor.execute('SELECT chat_id, chat_message_id, chat_message, chat_message_is_ia, chat_message_date FROM chat_message WHERE chat_message = ?', (chat_message,))
+        self.cursor.execute('SELECT chat_id, chat_message_id, chat_message, chat_message_file_content, chat_message_is_ia, chat_message_date FROM chat_message WHERE chat_message = ?', (chat_message,))
         return self.cursor.fetchone()
     
     ### DELETE REQUESTS
@@ -204,12 +205,12 @@ class Database:
         self.conn.commit()
     
     ### INSERT REQUESTS
-    def insert_chat_message(self, chat_id, chat_message, chat_message_is_ia):
-        self.cursor.execute('INSERT INTO chat_message (chat_id, chat_message, chat_message_is_ia) VALUES (?, ?, ?)', (chat_id, chat_message, chat_message_is_ia))
+    def insert_chat_message(self, chat_id, chat_message, chat_message_file_content, chat_message_is_ia):
+        self.cursor.execute('INSERT INTO chat_message (chat_id, chat_message, chat_message_file_content, chat_message_is_ia) VALUES (?, ?, ?, ?)', (chat_id, chat_message, chat_message_file_content, chat_message_is_ia))
         self.conn.commit()
     
     def select_chat_message_by_chat_id_and_user_id(self, chat_id, user_id):
-        self.cursor.execute('SELECT chat_message_id, chat_message, chat_message_is_ia, chat_message_date FROM chat_message JOIN chat ON chat_message.chat_id = chat.chat_id WHERE chat_message.chat_id = ? AND chat.user_id = ?', (chat_id, user_id))
+        self.cursor.execute('SELECT chat_message_id, chat_message, chat_message_file_content, chat_message_is_ia, chat_message_date FROM chat_message JOIN chat ON chat_message.chat_id = chat.chat_id WHERE chat_message.chat_id = ? AND chat.user_id = ?', (chat_id, user_id))
         return self.cursor.fetchall()
 
     

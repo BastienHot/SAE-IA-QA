@@ -32,20 +32,24 @@ def function_set_language(locale):
 
 
 def function_signup_button_pressed():
-    response = requests.post(URL + "signup", json={
-        'username': st.session_state['username'],
-        'password': st.session_state['password']
-    })
-    message = response.json().get('message', '')
+    try:
+        response = requests.post(URL + "signup", json={
+            'username': st.session_state['username'],
+            'password': st.session_state['password']
+        })
+        message = response.json().get('message', '')
 
-    if response.status_code == 200:
-        st.success(message)
-        st.session_state['current_page'] = 'Login'
-        st.session_state['signup_pressed'] = True
-        st.session_state['username'] = None
-        st.session_state['password'] = None
-    else:
-        st.error(message)
+        if response.status_code == 200:
+            st.success(message)
+            st.session_state['current_page'] = 'Login'
+            st.session_state['signup_pressed'] = True
+            st.session_state['username'] = None
+            st.session_state['password'] = None
+        else:
+            st.error(message)
+    
+    except Exception as e:
+        st.error(st.session_state['languages']['generalError'])
 
 
 def function_login_button_pressed():

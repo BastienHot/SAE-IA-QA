@@ -20,7 +20,8 @@ translations = {
             "selectedModel":"Selected model",
             "changeModel":"Change model",
             "enterQuestion":"Enter your question",
-        }
+        },
+        "generalError": "An error occurred. Please try again later. "
     },
     "fr": {
         "language": "Langue",
@@ -44,7 +45,6 @@ translations = {
             "changeModel": "Changer de modèle",
             "enterQuestion": "Entrez votre question"
         },
-        "title": "Bonjour le monde !",
-        "description": "Ceci est un exemple d'application Streamlit internationalisée."
+        "generalError": "Une erreur s'est produite. Veuillez réessayer plus tard. "
     }
 }

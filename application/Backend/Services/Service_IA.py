@@ -1,8 +1,8 @@
 from Model.IA import IA
-from Service.Service_Chat import Service_Chat
-from Service.Service_Chat_Message import Service_Chat_Message
-from Exception.UserNotConnectedException import UserNotConnectedException
-from Exception.ModelNotSelectedException import ModelNotSelectedException
+from Services.Service_Chat import Service_Chat
+from Services.Service_Chat_Message import Service_Chat_Message
+from Exceptions.UserNotConnectedException import UserNotConnectedException
+from Exceptions.ModelNotSelectedException import ModelNotSelectedException
 
 class Service_IA:
     def __init__(self):
@@ -33,7 +33,7 @@ class Service_IA:
         ia_response = ia.generate_responses(user_question, file_content, have_file, model)
         ia_response_json["ia_response"] = ia_response
         
-        serviceChatMessage.add_user_chat_message(chat_id, user_question, user_is_connected)
+        serviceChatMessage.add_user_chat_message(chat_id, user_question, file_content, user_is_connected)
         serviceChatMessage.add_ia_chat_message(chat_id, str(ia_response))
 
         return ia_response_json

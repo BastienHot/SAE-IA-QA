@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from Service.Service_IA import Service_IA
+from Services.Service_IA import Service_IA
 
 prediction_blueprint = Blueprint('prediction', __name__)
 

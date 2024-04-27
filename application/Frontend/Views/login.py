@@ -28,25 +28,29 @@ def view_login():
 
 
 def function_login_button_pressed():
-    response = requests.post(URL + "/login", json={
-        'username': st.session_state['username'],
-        'password': st.session_state['password']
-    })
+    try:
+        response = requests.post(URL + "/login", json={
+            'username': st.session_state['username'],
+            'password': st.session_state['password']
+        })
 
-    content = response.json()
-        
-    if content['state']:
-        st.session_state['current_page'] = 'Chatbot'
-        st.session_state['login_pressed'] = True
+        content = response.json()
+            
+        if content['state']:
+            st.session_state['current_page'] = 'Chatbot'
+            st.session_state['login_pressed'] = True
 
-        st.session_state['user_id'] = content['user_id']
-        st.session_state['user_name'] = content['user_name']
-        st.session_state['user_is_connected'] = content['user_is_connected']
+            st.session_state['user_id'] = content['user_id']
+            st.session_state['user_name'] = content['user_name']
+            st.session_state['user_is_connected'] = content['user_is_connected']
 
-        st.session_state['username'] = None
-        st.session_state['password'] = None
-    else:
-        st.error(content['message'])
+            st.session_state['username'] = None
+            st.session_state['password'] = None
+        else:
+            st.error(content['message'])
+            
+    except Exception as e:
+        st.error(st.session_state['languages']['generalError'])
 
 
 def function_signup_button_pressed():
