@@ -50,7 +50,7 @@ def function_login_button_pressed():
             st.error(content['message'])
             
     except Exception as e:
-        st.error(st.session_state['languages']['generalError'])
+        st.error(translations[st.session_state['languages']['generalError']])
 
 
 def function_signup_button_pressed():

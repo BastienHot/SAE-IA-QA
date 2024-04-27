@@ -114,11 +114,10 @@ def function_initialize_history():
         st.session_state.chat_history = response.json()
 
     except Exception as e:
-        st.error(st.session_state['languages']['generalError'])
+        st.error(translations[st.session_state['languages']['generalError']])
 
 
 def function_send_message():
-    print("===============>"+st.session_state['file_content'])
     try:
         response = requests.post(URL + "/predict", json={
             'user_id': st.session_state['user_id'],
@@ -141,7 +140,7 @@ def function_send_message():
         function_show_chat(int(content['chat_id']))
 
     except Exception as e:
-        st.error(st.session_state['languages']['generalError'])
+        st.error(translations[st.session_state['languages']['generalError']])
 
 
 
@@ -185,7 +184,7 @@ def function_show_chat(chat_id):
         st.session_state['model_selected'] = st.session_state['chat_history'][str(chat_id)]['chat_model']
     
     except Exception as e:
-        st.error(st.session_state['languages']['generalError'])
+        st.error(translations[st.session_state['languages']['generalError']])
 
 
 def function_delete_chat(chat_id):
@@ -208,7 +207,7 @@ def function_delete_chat(chat_id):
             st.session_state['is_chat_show'] = False
 
     except Exception as e:
-        st.error(st.session_state['languages']['generalError'])
+        st.error(translations[st.session_state['languages']['generalError']])
 
 
 def function_set_language(locale):
