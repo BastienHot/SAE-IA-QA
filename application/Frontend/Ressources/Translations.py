@@ -21,7 +21,8 @@ translations = {
             "changeModel":"Change model",
             "enterQuestion":"Enter your question",
         },
-        "generalError": "An error occurred. Please try again later. "
+        "generalError": "An error occurred. Please try again later. ",
+        "logout": "Logout"
     },
     "fr": {
         "language": "Langue",
@@ -45,6 +46,7 @@ translations = {
             "changeModel": "Changer de modèle",
             "enterQuestion": "Entrez votre question"
         },
-        "generalError": "Une erreur s'est produite. Veuillez réessayer plus tard. "
+        "generalError": "Une erreur s'est produite. Veuillez réessayer plus tard. ",
+        "logout": "Déconnexion"
     }
 }

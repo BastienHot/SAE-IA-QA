@@ -55,9 +55,9 @@ def view_history():
     col2.button('EN ', on_click=function_set_language, args=('en',))
     col3.button('FR ', on_click=function_set_language, args=('fr',))
 
-    col1, col2, col3 = st.sidebar.columns([3, 1, 1])
+    col1, col2, col3 = st.sidebar.columns([3, 1, 3])
     col1.write(st.session_state['user_name'].capitalize())
-    col3.button('🔒', on_click=function_logout_user)
+    col3.button(translations[st.session_state['languages']]['logout'], on_click=function_logout_user)
 
     st.sidebar.title('')
 
@@ -111,7 +111,7 @@ def function_initialize_history():
             'user_is_connected': st.session_state['user_is_connected'],
         })
 
-        st.session_state.chat_history = response.json()
+        st.session_state.chat_history = dict(sorted(response.json().items(), key=lambda item: item[1]['chat_date'], reverse=True))
 
     except Exception as e:
         st.error(translations[st.session_state['languages']]['generalError'])
@@ -143,7 +143,6 @@ def function_send_message():
         st.error(translations[st.session_state['languages']]['generalError'])
 
 
-
 def function_new_chat():
     st.session_state['chat_id'] = None
     st.session_state['selected_chat'] = None
@@ -171,7 +170,7 @@ def function_show_chat(chat_id):
         })
 
         content = response.json()
-
+        
         for message in content:
             if message['chat_message_file_content'] is not None:
                 st.session_state['have_file'] = True
@@ -232,4 +231,6 @@ def function_logout_user():
     st.session_state['signup_pressed'] = False
     st.session_state['model_selected_bln'] = False
     st.session_state['model_selected'] = None
+    st.session_state['file_content'] = None
+    st.session_state['is_chat_show'] = False
 

@@ -61,7 +61,7 @@ class IA:
 
         # Convert the token indexes to actual text of the answer
         answer = tokenizer.decode(inputs['input_ids'][0][answer_start:answer_end], skip_special_tokens=True)
-        
+        print("========================> ", answer)
         if answer != "" or len(answer) != 0:
             if language != "EN":
                 answer = Translator().translate(str(answer), src="en", dest=language).text # Translation of model's text to user's language
