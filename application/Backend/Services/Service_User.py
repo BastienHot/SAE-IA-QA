@@ -16,11 +16,15 @@ class Service_User:
             db.close()
             raise UserExistsException("User already exists")
 
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        try:
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-        db.insert_user(username, str(hashed_password))
-        db.close()
-
+            db.insert_user(username, str(hashed_password))
+            db.close()
+        except Exception as e:
+            db.close()
+            raise e
+        
         return "Account created successfully"
 
     ### Login user
@@ -32,17 +36,21 @@ class Service_User:
             db.close()
             raise UserOrPasswordIncorrectException("User or Password incorrect.")
 
-        hashed_password_from_db = user_info[2]
+        try:
+            hashed_password_from_db = user_info[2]
 
-        if hashed_password_from_db.startswith("b'") and hashed_password_from_db.endswith("'"):
-            hashed_password_from_db = hashed_password_from_db[2:-1].encode('utf-8')
-        elif isinstance(hashed_password_from_db, str):
-            hashed_password_from_db = hashed_password_from_db.encode('utf-8')
+            if hashed_password_from_db.startswith("b'") and hashed_password_from_db.endswith("'"):
+                hashed_password_from_db = hashed_password_from_db[2:-1].encode('utf-8')
+            elif isinstance(hashed_password_from_db, str):
+                hashed_password_from_db = hashed_password_from_db.encode('utf-8')
 
-        password_match = bcrypt.checkpw(password.encode('utf-8'), hashed_password_from_db)
+            password_match = bcrypt.checkpw(password.encode('utf-8'), hashed_password_from_db)
 
-        db.close()
-
+            db.close()
+        except Exception as e:
+            db.close()
+            raise e
+        
         if password_match == False:
             raise UserOrPasswordIncorrectException("User or Password incorrect.")
         

@@ -12,9 +12,13 @@ class Service_Chat:
         if is_connected == False:
             raise UserNotConnectedException("User not connected")
         
-        chat = db.select_chat_by_id_and_user_id(chat_id, user_id)
-
-        db.close()
+        try:
+            chat = db.select_chat_by_id_and_user_id(chat_id, user_id)
+            db.close()
+        except Exception as e:
+            db.close()
+            raise e
+        
         return chat
     
     def create_chat(self, user_id, chat_title, is_connected, model):
@@ -41,11 +45,14 @@ class Service_Chat:
         if is_connected == False:
             raise UserNotConnectedException("User not connected")
         
-        serviceChatMessage.delete_chat_message(chat_id, is_connected)
-        db.delete_chat_by_id_and_by_user_id(chat_id, user_id)
+        try:
+            serviceChatMessage.delete_chat_message(chat_id, is_connected)
+            db.delete_chat_by_id_and_by_user_id(chat_id, user_id)
+            db.close()
+        except Exception as e:
+            db.close()
+            raise e
         
-        db.close()
-
     def get_all_user_chats(self, user_id, is_connected):
         datas={}
 
@@ -54,18 +61,23 @@ class Service_Chat:
         if is_connected == False:
             raise UserNotConnectedException("User not connected")
 
-        chats = db.select_all_user_chats(user_id)
+        try:
+            chats = db.select_all_user_chats(user_id)
 
-        for chat in chats:
-            data = {
-                'chat_id': chat[0],
-                'chat_title': chat[1],
-                'chat_date': chat[2],
-                'chat_model': chat[3]
-            }
+            for chat in chats:
+                data = {
+                    'chat_id': chat[0],
+                    'chat_title': chat[1],
+                    'chat_date': chat[2],
+                    'chat_model': chat[3]
+                }
 
-            datas.update({chat[0]: data})
+                datas.update({chat[0]: data})
 
-        db.close()
+            db.close()
+        except Exception as e:
+            db.close()
+            raise e
+        
         return datas
 

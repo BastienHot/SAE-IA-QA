@@ -5,7 +5,6 @@ prediction_blueprint = Blueprint('prediction', __name__)
 
 @prediction_blueprint.route('/predict', methods=['POST'])
 def predict():
-    ia = Service_IA()
 
     question = request.json['user_question']
     user_id = request.json['user_id']
@@ -15,6 +14,10 @@ def predict():
     have_file = request.json['have_file']
     model = request.json['model_selected']
 
-    predictions = ia.generate_responses(question, user_id, chat_id, user_is_connected, file_content, have_file, model)
-
+    try:
+        ia = Service_IA()
+        predictions = ia.generate_responses(question, user_id, chat_id, user_is_connected, file_content, have_file, model)
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+    
     return jsonify(predictions)
