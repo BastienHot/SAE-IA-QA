@@ -10,6 +10,15 @@ class IA:
         self.tokenizer_bigbird = AutoTokenizer.from_pretrained('DracolIA/BigBird-Roberta-Context-based-QA', cache_dir=cache_dir)
         self.model_bigbird = AutoModelForQuestionAnswering.from_pretrained('DracolIA/BigBird-Roberta-Context-based-QA', cache_dir=cache_dir)
 
+        #self.tokenizer_albert = AutoTokenizer.from_pretrained('DracolIA/albert-base-v2', cache_dir=cache_dir)
+        #self.model_albert = AutoModelForQuestionAnswering.from_pretrained('DracolIA/albert-base-v2', cache_dir=cache_dir)
+
+        self.tokenizer_splinter = AutoTokenizer.from_pretrained('DracolIA/Splinter-Context-based-QA', cache_dir=cache_dir)
+        self.model_splinter = AutoModelForQuestionAnswering.from_pretrained('DracolIA/Splinter-Context-based-QA', cache_dir=cache_dir)
+
+        self.tokenizer_squeeze = AutoTokenizer.from_pretrained('DracolIA/SqueezeBert-Context-based-QA', cache_dir=cache_dir)
+        self.model_squeeze = AutoModelForQuestionAnswering.from_pretrained('DracolIA/SqueezeBert-Context-based-QA', cache_dir=cache_dir)
+        
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     def generate_responses(self, question, file_content, have_file, selected_model):
@@ -22,12 +31,30 @@ class IA:
             context = str()
 
         if selected_model.upper() == "BERT":
+            print("Choosen model: BERT")
             tokenizer = self.tokenizer_bert
             model = self.model_bert
 
-        elif selected_model.upper() == "BIGBIRD":
+        if selected_model.upper() == "BIGBIRD":
+            print("Choosen model: BIGBIRD")
             tokenizer = self.tokenizer_bigbird
             model = self.model_bigbird
+
+        if selected_model.upper() == "ALBERT":
+            print("Choosen model: ALBERT")
+            tokenizer = self.tokenizer_albert
+            model = self.model_albert
+
+        if selected_model.upper() == "SPLINTER":
+            print("Choosen model: SPLINTER")
+            tokenizer = self.tokenizer_splinter
+            model = self.model_splinter
+
+        if selected_model.upper() == "SQUEEZE":
+            print("Choosen model: SQUEEZE")
+            tokenizer = self.tokenizer_squeeze
+            model = self.model_squeeze
+
 
         if language != "EN":
                 question = translator.translate(str(question), src=language, dest="en").text # Translation of user text to english for the model

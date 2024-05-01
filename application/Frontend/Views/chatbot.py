@@ -40,9 +40,9 @@ def view_select_model():
 
     col1.button('Bert', on_click=function_select_model, args=('Bert',))
     col1.button('BigBird', on_click=function_select_model, args=('BigBird',))
-    col1.button('Model 3', on_click=function_select_model, args=('model_3',))
-
-
+    #col1.button('Albert', on_click=function_select_model, args=('Albert',))
+    col1.button('Splinter', on_click=function_select_model, args=('Splinter',))
+    col1.button('Squeeze', on_click=function_select_model, args=('Squeeze',))
 
 
 def view_history(): 
