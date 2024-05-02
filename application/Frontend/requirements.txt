@@ -4,3 +4,4 @@ python-docx
 pymupdf
 reportlab
 googletrans-py
+PyPDF2
