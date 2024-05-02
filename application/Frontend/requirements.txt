@@ -5,3 +5,4 @@ pymupdf
 reportlab
 googletrans-py
 PyPDF2
+openpyxl
