@@ -9,22 +9,12 @@ def view_chatbot():
 
     view_history()
 
-    if st.session_state['chat_id'] is None:
-        if st.session_state['model_selected_bln'] == False:
-            st.title(chatbot['selectModel'])
-            st.write(chatbot['chooseModel'])
-            st.write('')
-            view_select_model()
-        else :
-            st.title(chatbot['selectedModel'] + " : " + st.session_state['model_selected'])
-            st.button(chatbot['changeModel'], on_click=function_new_chat)
-            st.write('')
-            view_file_upload()
-            view_chat()
-    else:
-        st.title(st.session_state['chat_history'][str(st.session_state['chat_id'])]['chat_title'])
-        st.write(chatbot['selectedModel'] + " : " + st.session_state['model_selected'])
-        view_file_upload()
+    st.title(chatbot['selectedModel'] + " : " + st.session_state['model_selected'])
+    if st.session_state['chat_id'] is None :
+        view_select_model()
+    view_file_upload()
+
+    if st.session_state['chat_id'] is not None :
         for message in st.session_state['selected_chat']:
             if message['chat_message_is_ia'] == 1:
                 with st.chat_message("assistant"):
@@ -32,17 +22,17 @@ def view_chatbot():
             else:
                 with st.chat_message("user"):
                     st.write(message['chat_message'])
-        view_chat()
+    view_chat()
+
 
 def view_select_model():
-
-    col1, col2 = st.columns([2,6])
-
-    col1.button('Bert', on_click=function_select_model, args=('Bert',))
-    col1.button('BigBird', on_click=function_select_model, args=('BigBird',))
-    #col1.button('Albert', on_click=function_select_model, args=('Albert',))
-    col1.button('Splinter', on_click=function_select_model, args=('Splinter',))
-    col1.button('Squeeze', on_click=function_select_model, args=('Squeeze',))
+    st.selectbox(
+        translations[st.session_state['languages']]['chatbotPage']['chooseModel'],
+        ("Bert", "BigBird", "Albert", "Splinter", "Squeeze"),
+        index=0,
+        key="model",
+        on_change=function_select_model
+    )
 
 
 def view_history(): 
@@ -74,15 +64,8 @@ def view_history():
 
 def view_chat():
     chatbot = translations[st.session_state['languages']]['chatbotPage']
-    col1, col2 = st.columns  ([7, 1])
-
-    with col1:
-        st.text_input(chatbot['enterQuestion'], key='user_question', on_change=function_send_message)
-    with col2:
-        st.write('')
-        st.write('')
-        st.button('🔎', on_click=function_send_message)
-
+    st.chat_input(chatbot['enterQuestion'], key='prompt', on_submit=function_send_message)
+   
 
 def view_file_upload():
     file = st.file_uploader('Upload a file', type=['.docx', '.pdf', '.xlsx', '.csv'])  
@@ -118,6 +101,8 @@ def function_initialize_history():
 
 
 def function_send_message():
+    st.session_state['user_question'] = st.session_state['prompt']
+
     try:
         response = requests.post(URL + "/predict", json={
             'user_id': st.session_state['user_id'],
@@ -149,11 +134,8 @@ def function_new_chat():
     st.session_state['user_question'] = ''
     st.session_state['file_content'] = None
     st.session_state['have_file'] = False
-    st.session_state['is_chat_show'] = False
-
-    if st.session_state['model_selected_bln']:
-        st.session_state['model_selected_bln'] = False
-        st.session_state['model_selected'] = None
+    st.session_state['is_chat_show'] = False 
+    st.session_state['model_selected'] = "Bert"  
 
 
 def function_show_chat(chat_id):
@@ -163,23 +145,28 @@ def function_show_chat(chat_id):
     try:
         st.session_state['chat_id'] = int(chat_id)
 
-        response = requests.get(URL + "/chatMessage", json={
+        chat_message_response = requests.get(URL + "/chatMessage", json={
             'user_id': st.session_state['user_id'],
             'user_is_connected': st.session_state['user_is_connected'],
             'chat_id': chat_id
         })
 
-        content = response.json()
-        
-        for message in content:
-            if message['chat_message_file_content'] is not None:
-                st.session_state['have_file'] = True
-                st.session_state['file_content'] = message['chat_message_file_content']
-                st.session_state['is_chat_show'] = True
-                break
-        
-        st.session_state['selected_chat'] = content
-        st.session_state['model_selected_bln'] = True
+        chat_message_content = chat_message_response.json()
+
+        chat_reponse = requests.get(URL + "/getChat", json={
+            'user_id': st.session_state['user_id'],
+            'user_is_connected': st.session_state['user_is_connected'],
+            'chat_id': chat_id
+        })
+
+        chat_content = chat_reponse.json()
+
+        if chat_content[3] is not None:
+            st.session_state['have_file'] = True
+            st.session_state['file_content'] = chat_content[3]
+
+        st.session_state['is_chat_show'] = True
+        st.session_state['selected_chat'] = chat_message_content
         st.session_state['model_selected'] = st.session_state['chat_history'][str(chat_id)]['chat_model']
     
     except Exception as e:
@@ -197,8 +184,7 @@ def function_delete_chat(chat_id):
         del st.session_state.chat_history[str(chat_id)]
 
         if st.session_state['chat_id'] == chat_id:
-            st.session_state['model_selected'] = None
-            st.session_state['model_selected_bln'] = False
+            st.session_state['model_selected'] = "Bert"
             st.session_state['chat_id'] = None
             st.session_state['selected_chat'] = None
             st.session_state['have_file'] = False
@@ -213,9 +199,8 @@ def function_set_language(locale):
     st.session_state['languages'] = locale
 
 
-def function_select_model(model):
-    st.session_state['model_selected'] = model
-    st.session_state['model_selected_bln'] = True
+def function_select_model():
+    st.session_state['model_selected'] = st.session_state['model']
 
 
 def function_logout_user():
@@ -229,8 +214,7 @@ def function_logout_user():
     st.session_state['current_page'] = 'Login'
     st.session_state['login_pressed'] = False
     st.session_state['signup_pressed'] = False
-    st.session_state['model_selected_bln'] = False
-    st.session_state['model_selected'] = None
+    st.session_state['model_selected'] = "Bert"
     st.session_state['file_content'] = None
     st.session_state['is_chat_show'] = False
 

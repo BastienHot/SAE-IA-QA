@@ -10,6 +10,7 @@ login_blueprint = Blueprint('login', __name__)
 user_chat_history_blueprint = Blueprint('user chat history', __name__)
 delete_chat_blueprint = Blueprint('delete chat', __name__)
 chat_message_blueprint = Blueprint('chat message', __name__)
+get_chat_blueprint = Blueprint('get chat', __name__)
 
 @signup_blueprint.route('/signup', methods=['POST'])
 def signup_user():
@@ -79,9 +80,23 @@ def chat_message():
     user_id = request.json['user_id']
     user_is_connected = request.json['user_is_connected']
     chat_id = request.json['chat_id']
-
     try:
         chat = serviceChatMessage.get_chat_messages_by_chat_id_and_user_id(chat_id, user_is_connected, user_id)
+        return jsonify(chat), 200
+    except Exception as e:
+        return jsonify({'message': "Error fetching chat history."}), 500
+    
+
+@get_chat_blueprint.route('/getChat', methods=['GET'])
+def get_chat():
+    serviceChat = Service_Chat()
+    
+    user_id = request.json['user_id']
+    is_connected = request.json['user_is_connected']
+    chat_id = request.json['chat_id']
+
+    try:
+        chat = serviceChat.get_chat(chat_id, user_id, is_connected)
         return jsonify(chat), 200
     except Exception as e:
         return jsonify({'message': "Error fetching chat history."}), 500
