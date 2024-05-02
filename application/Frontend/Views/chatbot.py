@@ -28,7 +28,7 @@ def view_chatbot():
 def view_select_model():
     st.selectbox(
         translations[st.session_state['languages']]['chatbotPage']['chooseModel'],
-        ("Bert", "BigBird", "Albert", "Splinter", "Squeeze"),
+        ("Bert", "BigBird", "Splinter", "Squeeze"),
         index=0,
         key="model",
         on_change=function_select_model
@@ -79,11 +79,10 @@ def view_file_upload():
     string = ''
 
     if file is not None:
-        try:
-            string += serviceFile.file_for_string(file)
-            st.session_state['have_file'] = True
-        except Exception as e:
-            st.error(e)
+ 
+        string += serviceFile.file_for_string(file)
+        st.session_state['have_file'] = True
+
         st.session_state['file_content'] = string
 
 

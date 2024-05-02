@@ -5,7 +5,8 @@ from reportlab.lib.pagesizes import letter
 import pandas as pd
 from Exceptions.FileTypeIsNotAcceptedException import FileTypeIsNotAcceptedException
 from googletrans import Translator
-import re
+import PyPDF2
+from io import BytesIO
 
 class Service_File:
     def __init__(self):
@@ -15,35 +16,67 @@ class Service_File:
         translator = Translator()
         
         if file.name.endswith('.docx'):
+            print("File is a docx")
             string = self.word_to_string(file)
         
         elif file.name.endswith('.pdf'):
+            print("File is a pdf")
             string = self.pdf_to_string(file)
-        
+
         elif file.name.endswith('.xlsx'):
+            print("File is an .xlsx")
             string = self.excel_to_string(file)
         
         elif file.name.endswith('.csv'):
+            print("File is a .csv")
             string = self.csv_to_string(file)
         
         else:
             raise FileTypeIsNotAcceptedException('File type is not accepted. Please upload a .docx, .pdf, .xlsx or .csv file.')
         
-        language = translator.detect(str(string)).lang.upper() # Verify the language of the prompt
-        if string != "" or len(string) != 0:
-            if language != "EN":
-                string = translator.translate(str(string), src=language, dest="EN").text
-
         string = string.replace('\n', ' ').replace('\t', ' ').replace('"', ' ').replace("'", ' ')
+        split = self.split_text(string)
+        print(len(split))
+
+        translate = ""
+        for i in range(len(split)):
+            print(i)
+            language = translator.detect(str(split[i])).lang.upper() # Verify the language of the prompt
+            if split[i] != "" or len(split[i]) != 0:
+                if language != "EN":
+                    translate = translate + translator.translate(str(split[i]), src=language, dest="EN").text
+                else:
+                    translate = translate + split[i]
         
-        return string
+        print("translate: ", translate)
+        return translate
+
+
+    def split_text(self, text, max_chars=1500):
+        if len(text) <= max_chars:
+            return [text]
+
+        split_texts = []
+        current_text = ""
+        words = text.split()
+        for word in words:
+            if len(current_text) + len(word) + 1 <= max_chars:
+                current_text += word + " "
+            else:
+                split_texts.append(current_text)
+                current_text = word + " "
+        split_texts.append(current_text)
+
+        return split_texts
+    
 
     def pdf_to_string(self, file):
-        string = ""
-        with fitz.open(stream=file.getvalue()) as doc:
-            for page in doc:
-                string += page.get_text()
-        return string
+        pdf_data = file.read()
+        pdf_document = PyPDF2.PdfReader(BytesIO(pdf_data))
+        text = ""
+        for page_number in range(len(pdf_document.pages)):
+            text += pdf_document.pages[page_number].extract_text()
+        return text
 
     def word_to_string(self, file):
         doc = Document(file)
